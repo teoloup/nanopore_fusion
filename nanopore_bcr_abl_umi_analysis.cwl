@@ -29,6 +29,26 @@ inputs:
     type: Directory
     'sbg:x': 3958.647216796875
     'sbg:y': 376.3619689941406
+  - id: Barcode
+    type: string
+    'sbg:x': 2866.95458984375
+    'sbg:y': 724.9740600585938
+  - id: Library
+    type: string
+    'sbg:x': 2753.47705078125
+    'sbg:y': 631.0005493164062
+  - id: Platform
+    type: string
+    'sbg:x': 2631.134033203125
+    'sbg:y': 577.8079833984375
+  - id: Sample
+    type: string
+    'sbg:x': 2388.221435546875
+    'sbg:y': 677.1007690429688
+  - id: vcf_name
+    type: string
+    'sbg:x': 3741.27783203125
+    'sbg:y': -101.1181411743164
 outputs:
   - id: groupreads.tsv
     outputSource:
@@ -267,6 +287,18 @@ steps:
     in:
       - id: sorted_dedup_bam
         source: samtools_sort_2/sorted
+      - id: Library
+        default: '01'
+        source: Library
+      - id: Platform
+        default: MiknION
+        source: Platform
+      - id: Barcode
+        default: NNNNNN
+        source: Barcode
+      - id: Sample
+        default: sample
+        source: Sample
     out:
       - id: dedup_RG_bam
     run: ./picard_addorreplacereadgroups.cwl
@@ -309,8 +341,12 @@ steps:
         source: hg38
       - id: bam
         source: splitncigarreads/SplitCigar.bam
+      - id: vcf_name
+        source: vcf_name
       - id: bed_file
         source: bed_file
+      - id: sample_name
+        source: Sample
     out:
       - id: vcf
     run: ./gatk_mutect2_tumoronly.cwl
